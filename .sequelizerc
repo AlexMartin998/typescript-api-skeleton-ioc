@@ -1,0 +1,9 @@
+const path = require('path');
+
+module.exports = {
+  // config: path.join(__dirname, '/src/config/sequelize/config.json'),
+  config: path.join(__dirname, '/src/config/sequelize/config.js'),
+  'models-path': path.join(__dirname, '/src/app/data/models'),
+  'seeders-path': path.join(__dirname, '/src/app/data/seeders'),
+  'migrations-path': path.join(__dirname, '/src/app/data/migrations'),
+};
