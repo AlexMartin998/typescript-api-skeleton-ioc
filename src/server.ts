@@ -3,7 +3,9 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import 'express-async-errors';
 
+import { errorMiddleware, notFoundMiddleware } from './app/middlewares';
 import { dbConnection } from './config/db';
 
 type IoCServer = {
@@ -43,8 +45,8 @@ export class Server {
   }
 
   finalMiddlewares() {
-    // this.app.use(notFoundMiddleware);
-    // this.app.use(errorMiddleware);
+    this.app.use(notFoundMiddleware);
+    this.app.use(errorMiddleware);
   }
 
   listen() {
