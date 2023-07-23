@@ -7,6 +7,7 @@ import 'express-async-errors';
 
 import { errorMiddleware, notFoundMiddleware } from './app/middlewares';
 import { dbConnection } from './config/db';
+import { Logger } from './utils';
 
 type IoCServer = {
   config: {
@@ -51,10 +52,8 @@ export class Server {
 
   listen() {
     this.app.listen(this.config.PORT, () => {
-      console.log(
-        'App is running at http://localhost:%d in %s mode',
-        this.config.PORT,
-        this.config.APP_ENV
+      Logger.log(
+        `App is running on PORT ${this.config.PORT} in ${this.config.APP_ENV} mode`
       );
     });
   }
