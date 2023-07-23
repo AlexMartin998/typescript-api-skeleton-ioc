@@ -1,0 +1,91 @@
+version: '3.9'
+
+services:
+  # pnpm:
+  #   image: node:18-alpine
+  #   user: ${DOCKER_USER}
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.dev
+  #     target: deps
+  #   container_name: test-app-pnpm
+  #   volumes:
+  #     - .:/app
+
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.dev
+  #     target: runner
+  #   image: admin-dashboard
+  #   user: ${DOCKER_USER}
+  #   container_name: ideas-api
+  #   env_file: .example.env
+  #   volumes:
+  #     - .:/app
+  #     - ./:/workspace:cached
+  #   ports:
+  #     - ${PORT}:${PORT}
+  #   depends_on:
+  #     - mongodb
+  #     - pnpm
+  #     # mongodb:
+  #     #   condition: service_healthy
+  #     # pnpm:
+  #     #   condition: service_started
+
+  mongodb:
+    image: mongo:6.0
+    container_name: $MONGO_CONTAINER_NAME
+    restart: always
+    env_file: .example.env
+    ports:
+      - 2717:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+    volumes:
+      - mongodb:/data/db
+    command: ['--auth']
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  mysql:
+    image: mysql:8.0.33
+    restart: always
+    container_name: $DB_CONTAINER_NAME
+    ports:
+      - '3360:3306'
+    env_file: .example.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+      - MYSQL_USER=$MYSQL_USER
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+    volumes:
+      - mysql_db:/var/lib/mysql
+
+  phpmyadmin-service:
+    image: phpmyadmin/phpmyadmin:5.1.3
+    container_name: phpmyadmin-ideas
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: $MYSQL_ROOT_PASSWORD
+      PMA_ARBITRARY: 1
+      PMA_PORT: 3306
+    links:
+      - 'mysql:db'
+    ports:
+      - '8070:80'
+
+volumes:
+  mongodb:
+    external: false
+  mysql_db:
+    external: false
