@@ -27,6 +27,7 @@ export abstract class BaseService<T extends Model> implements Service<T> {
   }
 
   async update(id: number, entity: MakeNullishOptional<T>): Promise<T | null> {
+    await this.findOne(id);
     return this.repository.update(id, entity);
   }
 

@@ -19,8 +19,8 @@ export class Logger {
     console.log(logHeader, chalk.yellow(`[INFO] ${message}`));
   }
 
-  static error(message: string): void {
+  static error(message: string, ...args: unknown[]): void {
     const logHeader = Logger._getLogHeader();
-    console.error(logHeader, chalk.red(`[ERROR] ${message}`));
+    console.error(logHeader, chalk.red(`[ERROR] ${message}\n`), ...args);
   }
 }

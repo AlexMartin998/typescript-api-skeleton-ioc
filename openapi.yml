@@ -1,0 +1,21 @@
+openapi: '3.0.1'
+info:
+  title: 'TypeScript API Skeleton'
+  version: '1.0'
+  description: 'TypeScript API Skeleton'
+  contact:
+    name: Adrian Changalombo
+  license:
+    name: MIT
+servers:
+  - url: 'http://localhost:5000/v1/api'
+    description: Development
+paths:
+  /status:
+    get:
+      summary: Status end point
+      tags:
+        - status
+      responses:
+        '200':
+          description: OK

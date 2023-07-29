@@ -1,17 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
+import { Error as SequelizeError } from 'sequelize';
 
-export default (
-  err: any,
-  _req: Request,
-  res: Response,
-  _next: NextFunction
-) => {
-  const httpStatus = err.status || 500;
+import { Logger } from '../../utils';
 
-  return res.status(httpStatus).send({
-    status: httpStatus,
-    message: err.message || 'Internal server error',
+const errorMessages = new Map([
+  [
+    SequelizeError,
+    {
+      status: 500,
+      message: 'Record could not be saved',
+    },
+  ],
+]);
+
+export default (err: any, _req: Request, res: Response, next: NextFunction) => {
+  const { status, message } = errorMessages.get(err.constructor) || {
+    status: 500,
+    message: 'Something went wrong',
+  };
+
+  Logger.error(err);
+
+  return res.status(status).send({
+    status,
+    message,
   });
 };
