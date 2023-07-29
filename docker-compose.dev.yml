@@ -20,7 +20,6 @@ services:
   #   image: admin-dashboard
   #   user: ${DOCKER_USER}
   #   container_name: ideas-api
-  #   env_file: .example.env
   #   volumes:
   #     - .:/app
   #     - ./:/workspace:cached
@@ -38,7 +37,6 @@ services:
     image: mongo:6.0
     container_name: $MONGO_CONTAINER_NAME
     restart: always
-    env_file: .example.env
     ports:
       - 2717:27017
     environment:
@@ -60,7 +58,6 @@ services:
     container_name: $DB_CONTAINER_NAME
     ports:
       - '3360:3306'
-    env_file: .example.env
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
       - MYSQL_DATABASE=$MYSQL_DATABASE
